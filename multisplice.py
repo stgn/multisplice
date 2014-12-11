@@ -39,10 +39,10 @@ def multisplice(manifest, fps, output, dirty):
     ft = 1 / Fraction(fps)
     for f, fr in agg.iteritems():
         arg = ','.join('-'.join(str(timedelta(seconds=float(ft * t))) for t in r) for r in fr)
-        if call(['mkvmerge', '-q', f, '-o', '_%s.mka' % f, '--split', 'parts:' + arg]) > 1:
-            sys.exit('%s: Split failed' % f)
+        if call(['mkvmerge', '-q', f, '-o', '_{}.mka'.format(f), '--split', 'parts:' + arg]) > 1:
+            sys.exit('{}: Split failed'.format(f))
         
-    files = ['_%s-%03d.mka' % (f, agg[f].index(r) + 1) for f, r in parts]
+    files = [('_{}' + '-{:03d}' * (len(agg[f]) > 1) + '.mka').format(f, agg[f].index(r) + 1) for f, r in parts]
     join_files = ['+' * (i > 0) + f for i, f in enumerate(files)]
     if call(['mkvmerge', '-q', '-o', out] + join_files) > 1:
         sys.exit('Splice failed')
