@@ -49,5 +49,3 @@ Known issues
 ------------
 
 * Variable frame rate (VFR) is not supported.
-* Requires demuxed audio tracks.
-* Not a bug, but being able to parse trims/sources from AVS would be nice.
