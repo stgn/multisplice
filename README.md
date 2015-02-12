@@ -10,6 +10,8 @@ Prerequisites
 
 Your audio tracks should use the same codec, sampling rate, and channel configuration. For some codecs (such as AC-3), the bitrate should be the same as well (or you'll get decode errors in players such as VLC). If your files have different format parameters, you may need to transcode them to match.
 
+Your videos must have the same constant frame rate when syncing with AviSynth. If they are different, or one of them is variable, you must use `ChangeFPS` for CFR or your source filter's frame rate arguments (e.g. `fpsnum`/`fpsden` in `FFVideoSource`) for VFR.
+
 Example
 -------
 
@@ -44,8 +46,3 @@ Then we let multisplice (actually mostly mkvmerge) do its magic:
 The `-f` parameter specifies the frame rate at which to convert the trim points into timestamps. Since our videos are NTSC film (approximately 23.976 frames per second), we use `24000/1001`.
 
 By default, the output is saved to a filename based on the template, with the asterisk replaced with "spliced" (in this case, the output filename is `foo_spliced.mka`). You can also use the `-o` parameter to specify a filename.
-
-Known issues
-------------
-
-* Variable frame rate (VFR) is not supported.
