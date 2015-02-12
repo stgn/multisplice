@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os, re
+import os, re
 import click
 from subprocess import call
 from collections import defaultdict
@@ -30,26 +30,28 @@ def multisplice(manifest, fps, output, dirty):
             p = m.groups()
             parts.append((tmpl.replace('*', p[0]), (int(p[1]), int(p[2]) + 1)))
         else:
-            sys.exit('Unable to parse manifest')
+            raise Exception('Unable to parse manifest')
             
     agg = defaultdict(list)
     for f, r in parts:
         agg[f].append(r)
-        
-    ft = 1 / Fraction(fps)
-    for f, fr in agg.iteritems():
-        arg = ','.join('-'.join(str(timedelta(seconds=float(ft * t))) for t in r) for r in fr)
-        if call(['mkvmerge', '-q', f, '-o', '_{}.mka'.format(f), '--split', 'parts:' + arg]) > 1:
-            sys.exit('{}: Split failed'.format(f))
-        
+    
     files = [('_{}' + '-{:03d}' * (len(agg[f]) > 1) + '.mka').format(f, agg[f].index(r) + 1) for f, r in parts]
-    join_files = ['+' * (i > 0) + f for i, f in enumerate(files)]
-    if call(['mkvmerge', '-q', '-o', out] + join_files) > 1:
-        sys.exit('Splice failed')
-
-    if not dirty:
-        for f in files:
-            os.remove(f)
+                
+    try:
+        ft = 1 / Fraction(fps)
+        for f, fr in agg.iteritems():
+            arg = ','.join('-'.join(str(timedelta(seconds=float(ft * t))) for t in r) for r in fr)
+            if call(['mkvmerge', '-q', f, '-o', '_{}.mka'.format(f), '--split', 'parts:' + arg]) > 1:
+                raise Exception('{}: Split failed'.format(f))
+            
+        join_files = ['+' * (i > 0) + f for i, f in enumerate(files)]
+        if call(['mkvmerge', '-q', '-o', out] + join_files) > 1:
+            raise Exception('Splice failed')
+    finally:
+        if not dirty:
+            for f in filter(os.path.isfile, files):
+                os.remove(f)
         
 if __name__ == '__main__':
     multisplice()

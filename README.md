@@ -48,7 +48,6 @@ By default, the output is saved to a filename based on the template, with the as
 Known issues
 ------------
 
-* Intermediate split files are not deleted in the event of failure.
 * Variable frame rate (VFR) is not supported.
 * Manifest parser is rather inflexible. Consider something like YAML.
 * Requires demuxed audio tracks.
