@@ -21,14 +21,14 @@ def multisplice(manifest, fps, output, dirty):
     """Splices together portions of audio from multiple source files, as specified by a MANIFEST file."""
     
     tmpl = manifest.readline().rstrip('\r\n')
-    out = output or os.path.splitext(tmpl.replace('*', 'spliced'))[0] + '.mka'
+    out = output or os.path.splitext(tmpl.format('spliced'))[0] + '.mka'
     
     parts = []
     for line in manifest:
-        m = re.search(r'(\w+) (\d+)-(\d+)', line)
+        m = re.search(r'(\w+) (\d+) (\d+)', line)
         if m:
             p = m.groups()
-            parts.append((tmpl.replace('*', p[0]), (int(p[1]), int(p[2]) + 1)))
+            parts.append((tmpl.format(p[0]), (int(p[1]), int(p[2]) + 1)))
         else:
             raise Exception('Unable to parse manifest')
             

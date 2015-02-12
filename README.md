@@ -28,14 +28,14 @@ To find out which parts we need and from where, we write an AviSynth script that
   
 After that's done, we demux the audio tracks and convert the trims to a *manifest file*.
 
-	foo_*.mka
-	eng 3-1200
-	jpn 1198-3378
-	eng 1898-30761
-	jpn 32243-34401
-	eng 32370-32728
+	foo_{}.mka
+	eng 3 1200
+	jpn 1198 3378
+	eng 1898 30761
+	jpn 32243 34401
+	eng 32370 32728
     
-The first line is a "template" filename. For each line, multisplice will take the template and replace the asterisk with the first part of the line (e.g. `eng` to `foo_eng.mka`). The second part of each line is the trim points, measured in video frames (inclusive).
+The first line is a "template" filename. For each line, multisplice will take the template and replace the `{}` with the first part of the line (e.g. `eng` to `foo_eng.mka`). The second part of each line is the trim points, measured in video frames (inclusive).
 
 Then we let multisplice (actually mostly mkvmerge) do its magic:
 
@@ -49,6 +49,5 @@ Known issues
 ------------
 
 * Variable frame rate (VFR) is not supported.
-* Manifest parser is rather inflexible. Consider something like YAML.
 * Requires demuxed audio tracks.
 * Not a bug, but being able to parse trims/sources from AVS would be nice.
