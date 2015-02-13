@@ -25,7 +25,7 @@ def multisplice(manifest, fps, output, dirty):
     
     parts = []
     for line in manifest:
-        m = re.search(r'(\w+) (\d+) (\d+)', line)
+        m = re.search(r'(\S+) (\d+) (\d+)', line)
         if m:
             p = m.groups()
             parts.append((tmpl.format(p[0]), (int(p[1]), int(p[2]) + 1)))
